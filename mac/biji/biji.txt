@@ -1,0 +1,15 @@
+minikube start --image-repository registry.cn-hangzhou.aliyuncs.com/google_containers
+
+curl
+-L 参数会让 HTTP 请求跟随服务器的重定向
+
+
+grep
+* 和 + 限定符都是贪婪的，因为它们会尽可能多的匹配文字，只要在它们的后面加上一个?就可以实现懒惰或最小匹配
+grep -oP "app:.*?;"
+
+cat access.log | grep -v '"time":0.0'
+
+while true; do ; sleep 1;done
+
+test
