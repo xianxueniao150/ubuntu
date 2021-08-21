@@ -135,3 +135,8 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 export PATH="/usr/local/opt/php/sbin:$PATH"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+function mkcd() { mkdir -p "$@" && cd "$_"; }
+alias tarp='tar -zxvf'
+
+

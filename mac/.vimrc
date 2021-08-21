@@ -1,10 +1,15 @@
 call plug#begin()
+Plug 'mbbill/undotree'
+Plug 'farmergreg/vim-lastplace'
+" store session
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-session'
 Plug 'lifepillar/vim-cheat40'
-
+Plug 'tomtom/tcomment_vim'
 " 可以快速对齐的插件
 Plug 'junegunn/vim-easy-align'
 " 用来提供一个导航目录的侧边栏
-Plug 'scrooloose/nerdtree'
+Plug 'preservim/nerdtree'
 " 可以使 nerdtree Tab 标签的名称更友好些
 Plug 'jistr/vim-nerdtree-tabs'
 " 可以在导航目录中看到 git 版本信息
@@ -51,18 +56,10 @@ Plug 'junegunn/fzf.vim'
 Plug 'Raimondi/delimitMate'
 " 语法错误检查
 Plug 'dense-analysis/ale'
+" nerdtree 等图标
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
-""""
-" Start NERDTree and put the cursor back in the other window.
-" autocmd VimEnter * NERDTree | wincmd p
-"打开vim时如果没有文件自动打开NERDTree
-autocmd vimenter * if !argc()|NERDTree|endif
-"当NERDTree为剩下的唯一窗口时自动关闭
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" 过滤: 所有指定文件和文件夹不显示
-let NERDTreeIgnore = ['\.pyc$', '\.swp', '\.swo', '\.vscode', '__pycache__']
 
-autocmd BufEnter * lcd %:p:h
 "==============================================================================
 " vim 内置配置 
 "==============================================================================
@@ -81,6 +78,7 @@ set wildmode=list:longest
 " 关闭兼容模式
 set nocompatible
 syntax on
+set autowrite
 " Sets how many lines of history VIM has to remember
 set history=500
 set cursorline "突出显示当前行
@@ -130,25 +128,6 @@ set laststatus=2
 "set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c\ \[ff=%{&ff}]
 
 
-"==============================================================================
-" vim-go 插件
-"==============================================================================
-let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
-let g:go_autodetect_gopath = 1
-let g:go_list_type = "quickfix"
-
-let g:go_version_warning = 1
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_generate_tags = 1
-
-let g:godef_split=2
-"au filetype go inoremap <buffer> . .<C-x><C-o>
 let mapleader=";" 
 
 " 退出插入模式指定类型的文件自动保存
@@ -160,32 +139,46 @@ map <F3> :NERDTreeMirror<CR>
 map <F3> :NERDTreeToggle<CR>
 imap <F3> <esc>:NERDTreeMirror<CR>
 imap <F3> <esc>:NERDTreeToggle<CR>
+map <F7> :source ~/.vimrc<cr>
 nnoremap <CR> a<CR><Esc>
 "imap <D-s> <esc>:w<CR>
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
 autocmd FileType help noremap <buffer> q :q<cr>
+
+function! s:swap_lines(n1, n2)
+    let line1 = getline(a:n1)
+    let line2 = getline(a:n2)
+    call setline(a:n1, line2)
+    call setline(a:n2, line1)
+endfunction
+
+function! s:swap_up()
+    let n = line('.')
+    if n == 1
+        return
+    endif
+
+    call s:swap_lines(n, n - 1)
+    exec n - 1
+endfunction
+
+function! s:swap_down()
+    let n = line('.')
+    if n == line('$')
+        return
+    endif
+
+    call s:swap_lines(n, n + 1)
+    exec n + 1
+endfunction
+
+noremap <silent> <c-s-k> :call <SID>swap_up()<CR>
+noremap <silent> <c-s-j> :call <SID>swap_down()<CR>
+
+
 set rtp+=/opt/homebrew/opt/fzf
-
-"==============================================================================
-" vim-go 插件
-"==============================================================================
-let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
-let g:go_autodetect_gopath = 1
-let g:go_list_type = "quickfix"
-
-let g:go_version_warning = 1
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_generate_tags = 1
-
-let g:godef_split=2
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
@@ -239,3 +232,77 @@ function! VisualSelection(direction, extra_filter) range
     let @/ = l:pattern
     let @" = l:saved_reg
 endfunction
+
+
+"----------------------coc.vim
+"Use <Tab> and <S-Tab> to navigate the completion list:
+"inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+
+
+"==============================================================================
+" vim-go 插件
+"==============================================================================
+let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
+let g:go_fmt_fail_silently = 1 "保存时不提示错误
+let g:go_autodetect_gopath = 1
+let g:go_list_type = "quickfix"
+
+let g:go_version_warning = 1
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_generate_tags = 1
+
+let g:godef_split=2
+
+" Status line types/signatures
+let g:go_auto_type_info = 1
+
+"au filetype go inoremap <buffer> . .<C-x><C-o>
+map <F2> :cnext<CR>
+" Ex: `\b` for building, `\r` for running and `\b` for running test.
+autocmd FileType go nmap <leader>b  <Plug>(go-build)
+autocmd FileType go nmap <leader>r  <Plug>(go-run)
+autocmd FileType go nmap <leader>t  <Plug>(go-test)
+
+" comment
+inoremap <c-.> <c-_><c-_>
+
+" undo
+if has("persistent_undo")
+   let target_path = expand('~/.vim/undodir')
+
+    " create the directory and any parent directories
+    " if the location does not exist.
+    if !isdirectory(target_path)
+        call mkdir(target_path, "p", 0700)
+    endif
+
+    let &undodir=target_path
+    set undofile
+endif
+
+"airline
+let g:airline_powerline_fonts = 1 
+
+"session
+let g:session_autosave = 'no'
+
+" nerdtree
+"Start NERDTree and put the cursor back in the other window.
+" autocmd VimEnter * NERDTree | wincmd p
+"打开vim时如果没有文件自动打开NERDTree
+autocmd vimenter * if !argc()|NERDTree|endif
+"当NERDTree为剩下的唯一窗口时自动关闭
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" 过滤: 所有指定文件和文件夹不显示
+let NERDTreeIgnore = ['\.pyc$', '\.swp', '\.swo', '\.vscode', '__pycache__']
+
+
