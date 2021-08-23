@@ -1,4 +1,6 @@
 call plug#begin()
+Plug 'tpope/vim-surround'
+" Plug 'itchyny/vim-cursorword'
 Plug 'mbbill/undotree'
 Plug 'farmergreg/vim-lastplace'
 " store session
@@ -44,11 +46,13 @@ Plug 'chriskempson/base16-vim'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 "Plug 'fatih/vim-go', { 'tag': '*' }
 " go 中的代码追踪，输入 gd 就可以自动跳转
-Plug 'dgryski/vim-godef'
+" Plug 'dgryski/vim-godef'
+Plug 'ctrlpvim/ctrlp.vim'
 
 " markdown 插件
-Plug 'iamcco/mathjax-support-for-mkdp'
+" Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 Plug 'iamcco/markdown-preview.vim'
+Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
 
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
@@ -58,54 +62,63 @@ Plug 'Raimondi/delimitMate'
 Plug 'dense-analysis/ale'
 " nerdtree 等图标
 Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 call plug#end()
-
 "==============================================================================
 " vim 内置配置 
 "==============================================================================
 
 " 设置 vimrc 修改保存后立刻生效，不用在重新打开
 " 建议配置完成后将这个关闭
+
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
+
+set nocompatible "关闭兼容模式
+syntax on
+set showcmd  "（在右下角）显示现有的命令
+set mouse=a
+set encoding=utf-8 
+set t_Co=256 "启用256色
+filetype indent on "开启文件类型检查，并且载入与该类型对应的缩进规则
+
+"缩进
+set autoindent "按下回车键后，下一行的缩进会自动跟上一行的缩进保持一致
+set tabstop=4 " 设置Tab长度为4空格
+set shiftwidth=4 "在文本上按下>>的字符数
+
+"外观
+set number
+set relativenumber
+set cursorline "突出显示当前行
+
+"搜索
+set showmatch " 显示括号匹配
+set hlsearch   " Highlight search results
+set incsearch  "每输入一个字符，就自动跳到第一个匹配的结果
+set ignorecase
+set smartcase "对于只有一个大写字母的搜索词，将大小写敏感；其他情况都是大小写不敏感
+
+
+
 " 使用 256 颜色库
 let base16colorspace=256
-" 使用 base16 中 base16-oceanicnext
 "colorscheme neodark.vim
+" 使用 base16 中 base16-oceanicnext
 set softtabstop=4
-set relativenumber
-set mouse=a
-set wildmode=list:longest
-" 关闭兼容模式
-set nocompatible
-syntax on
+" Give more space for displaying messages.
+set cmdheight=2
+set wildmode=list:longest "命令模式下，Tab 键自动补全
 set autowrite
 " Sets how many lines of history VIM has to remember
 set history=500
-set cursorline "突出显示当前行
 " set cursorcolumn " 突出显示当前列
-set showmatch " 显示括号匹配
 " 解决插入模式下delete/backspce键失效问题
 set backspace=2
-set showcmd  "（在右下角）显示现有的命令
-" tab 缩进
-set tabstop=4 " 设置Tab长度为4空格
-set shiftwidth=4 " 设置自动缩进长度为4空格
-set autoindent " 继承前一行的缩进方式，适用于多行注释
 
 " Set 7 lines to the cursor - when moving vertically using j/k
-set so=7
 "Always show current position
-set ruler
-" Ignore case when searching
-set ignorecase
-" When searching try to be smart about cases 
-set smartcase
-" Highlight search results
-set hlsearch
-" Makes search act like search in modern browsers
-set incsearch 
-" Show matching brackets when text indicator is over them
-set showmatch
+set so=7
+" set ruler
 " How many tenths of a second to blink when matching brackets
 set mat=2
 
@@ -127,20 +140,21 @@ set laststatus=2
 " Format the status line
 "set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c\ \[ff=%{&ff}]
 
-
 let mapleader=";" 
+
 
 " 退出插入模式指定类型的文件自动保存
 au InsertLeave *.go,*.sh,*.php write
 
 " Fast saving
 nmap <leader>w :w!<cr>
-map <F3> :NERDTreeMirror<CR>
-map <F3> :NERDTreeToggle<CR>
-imap <F3> <esc>:NERDTreeMirror<CR>
-imap <F3> <esc>:NERDTreeToggle<CR>
 map <F7> :source ~/.vimrc<cr>
-nnoremap <CR> a<CR><Esc>
+" enter 在下一行插入空行
+nnoremap <CR> o<Esc>
+" space 插入空格
+noremap <Space> i<Space><Esc>l
+" backspace 删除
+noremap <BS> i<BS><Esc>l
 "imap <D-s> <esc>:w<CR>
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
@@ -174,8 +188,8 @@ function! s:swap_down()
     exec n + 1
 endfunction
 
-noremap <silent> <c-s-k> :call <SID>swap_up()<CR>
-noremap <silent> <c-s-j> :call <SID>swap_down()<CR>
+" noremap <silent> <c-s-k> :call <SID>swap_up()<CR>
+" noremap <silent> <c-s-j> :call <SID>swap_down()<CR>
 
 
 set rtp+=/opt/homebrew/opt/fzf
@@ -265,12 +279,16 @@ let g:godef_split=2
 " Status line types/signatures
 let g:go_auto_type_info = 1
 
+" highlight identifiers
+let g:go_auto_sameids = 1
+
 "au filetype go inoremap <buffer> . .<C-x><C-o>
 map <F2> :cnext<CR>
 " Ex: `\b` for building, `\r` for running and `\b` for running test.
 autocmd FileType go nmap <leader>b  <Plug>(go-build)
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
 autocmd FileType go nmap <leader>t  <Plug>(go-test)
+autocmd FileType go nmap gb  <c-t>
 
 " comment
 inoremap <c-.> <c-_><c-_>
@@ -304,5 +322,44 @@ autocmd vimenter * if !argc()|NERDTree|endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " 过滤: 所有指定文件和文件夹不显示
 let NERDTreeIgnore = ['\.pyc$', '\.swp', '\.swo', '\.vscode', '__pycache__']
+let g:WebDevIconsNerdTreeBeforeGlyphPadding = ""
+let g:webdevicons_conceal_nerdtree_brackets=1
+map <F3> :NERDTreeTabsToggle<CR>
+imap <F3> <esc>:NERDTreeTabsToggle<CR>
 
 
+" markdown
+autocmd Filetype markdown inoremap ,f <Esc>/<++><CR>:nohlsearch<CR>c4l
+autocmd Filetype markdown inoremap ,n ---<Enter><Enter>
+autocmd Filetype markdown inoremap ,b **** <++><Esc>F*hi
+autocmd Filetype markdown inoremap ,s ~~~~ <++><Esc>F~hi
+autocmd Filetype markdown inoremap ,i ** <++><Esc>F*i
+autocmd Filetype markdown inoremap ,d `` <++><Esc>F`i
+autocmd Filetype markdown inoremap ,c ```<Enter><++><Enter>```<Enter><Enter><++><Esc>4kA
+autocmd Filetype markdown inoremap ,h ====<Space><++><Esc>F=hi
+autocmd Filetype markdown inoremap ,p ![](<++>) <++><Esc>F[a
+autocmd Filetype markdown inoremap ,a [](<++>) <++><Esc>F[a
+autocmd Filetype markdown inoremap ,1 #<Space><Enter><++><Esc>kA
+autocmd Filetype markdown inoremap ,2 ##<Space><Enter><++><Esc>kA
+autocmd Filetype markdown inoremap ,3 ###<Space><Enter><++><Esc>kA
+autocmd Filetype markdown inoremap ,4 ####<Space><Enter><++><Esc>kA
+autocmd Filetype markdown inoremap ,l --------<Enter>
+
+
+function! Zoom ()
+    " check if is the zoomed state (tabnumber > 1 && window == 1)
+    if tabpagenr('$') > 1 && tabpagewinnr(tabpagenr(), '$') == 1
+        let l:cur_winview = winsaveview()
+        let l:cur_bufname = bufname('')
+        tabclose
+
+        " restore the view
+        if l:cur_bufname == bufname('')
+            call winrestview(cur_winview)
+        endif
+    else
+        tab split
+    endif
+endfunction
+
+nmap <leader>z :call Zoom()<CR>

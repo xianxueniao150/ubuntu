@@ -139,4 +139,4 @@ export PATH="/usr/local/opt/php/sbin:$PATH"
 function mkcd() { mkdir -p "$@" && cd "$_"; }
 alias tarp='tar -zxvf'
 
-
+export GOPRIVATE=git.joyme.sg,git.linkv.sg
