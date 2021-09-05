@@ -92,7 +92,13 @@ ZSH_THEME="ys"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+# autojump需要先brew安装
+plugins=(
+	git 
+	colored-man-pages
+	autojump
+	vi-mode
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -126,13 +132,12 @@ source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # 命令提示
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
-source $ZSH/oh-my-zsh.sh
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 export PATH="/usr/local/opt/php/sbin:$PATH"
+export PATH="$GOPATH/bin:$PATH"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -140,3 +145,11 @@ function mkcd() { mkdir -p "$@" && cd "$_"; }
 alias tarp='tar -zxvf'
 
 export GOPRIVATE=git.joyme.sg,git.linkv.sg
+
+# colored man pages
+less_termcap[md]="${fg_bold[blue]}" # this tells less to print bold text in bold blue
+
+# vi mode
+VI_MODE_RESET_PROMPT_ON_MODE_CHANGE=true
+VI_MODE_SET_CURSOR=true
+MODE_INDICATOR="%F{yellow}+%f"

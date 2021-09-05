@@ -1,4 +1,7 @@
 call plug#begin()
+" Plug 'glepnir/dashboard-nvim'
+Plug 'jdhao/better-escape.vim'
+Plug '907th/vim-auto-save'
 Plug 'tpope/vim-surround'
 " Plug 'itchyny/vim-cursorword'
 Plug 'mbbill/undotree'
@@ -19,35 +22,26 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 " 查看当前代码文件中的变量和函数列表的插件，
 " 可以切换和跳转到代码中对应的变量和函数的位置
 " 大纲式导航, Go 需要 https://github.com/jstemmer/gotags 支持
-Plug 'majutsushi/tagbar'
+Plug 'preservim/tagbar'
 " 自动补全括号的插件，包括小括号，中括号，以及花括号
 Plug 'jiangmiao/auto-pairs'
 " Vim状态栏插件，包括显示行号，列号，文件类型，文件名，以及Git状态
 Plug 'vim-airline/vim-airline'
 " 有道词典在线翻译
-Plug 'ianva/vim-youdao-translater'
+" Plug 'ianva/vim-youdao-translater'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " 可以在文档中显示 git 信息
 Plug 'airblade/vim-gitgutter'
 " 下面两个插件要配合使用，可以自动生成代码块
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-" 配色方案
-Plug 'KeitaNakamura/neodark.vim'
-" colorscheme monokai
-Plug 'crusoexia/vim-monokai'
-" colorscheme github
-Plug 'acarapetis/vim-colors-github'
-" colorscheme one
-Plug 'rakr/vim-one'
-Plug 'chriskempson/base16-vim'
 
 " go 主要插件
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 "Plug 'fatih/vim-go', { 'tag': '*' }
 " go 中的代码追踪，输入 gd 就可以自动跳转
 " Plug 'dgryski/vim-godef'
-Plug 'ctrlpvim/ctrlp.vim'
+" Plug 'ctrlpvim/ctrlp.vim'
 
 " markdown 插件
 " Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
@@ -59,7 +53,7 @@ Plug 'junegunn/fzf.vim'
 " 设置括号等自动成双
 Plug 'Raimondi/delimitMate'
 " 语法错误检查
-Plug 'dense-analysis/ale'
+" Plug 'dense-analysis/ale'
 " nerdtree 等图标
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
@@ -70,8 +64,7 @@ call plug#end()
 
 " 设置 vimrc 修改保存后立刻生效，不用在重新打开
 " 建议配置完成后将这个关闭
-
-autocmd BufWritePost $MYVIMRC source $MYVIMRC
+" autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
 set nocompatible "关闭兼容模式
 syntax on
@@ -106,9 +99,10 @@ let base16colorspace=256
 " 使用 base16 中 base16-oceanicnext
 set softtabstop=4
 " Give more space for displaying messages.
-set cmdheight=2
+set hidden
+set updatetime=100
 set wildmode=list:longest "命令模式下，Tab 键自动补全
-set autowrite
+" set autowrite
 " Sets how many lines of history VIM has to remember
 set history=500
 " set cursorcolumn " 突出显示当前列
@@ -125,8 +119,8 @@ set mat=2
 " No annoying sound on errors
 set noerrorbells
 set novisualbell
-set t_vb=
-set tm=500
+" set t_vb=
+" set tm=500
 set noswapfile 
 " Add a bit extra margin to the left
 "set foldcolumn=1
@@ -137,17 +131,13 @@ set noswapfile
 " Always show the status line
 set laststatus=2
 
-" Format the status line
-"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c\ \[ff=%{&ff}]
-
 let mapleader=";" 
-
 
 " 退出插入模式指定类型的文件自动保存
 au InsertLeave *.go,*.sh,*.php write
 
 " Fast saving
-nmap <leader>w :w!<cr>
+" nmap <leader>w :w!<cr>
 map <F7> :source ~/.vimrc<cr>
 " enter 在下一行插入空行
 nnoremap <CR> o<Esc>
@@ -155,11 +145,23 @@ nnoremap <CR> o<Esc>
 noremap <Space> i<Space><Esc>l
 " backspace 删除
 noremap <BS> i<BS><Esc>l
+" 切换窗口
+noremap  <leader>ww <c-w>w 
+" 首尾切换
+noremap <expr>0 col(".")==1?"$":"0"
+
+
 "imap <D-s> <esc>:w<CR>
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
-command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+" command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
 autocmd FileType help noremap <buffer> q :q<cr>
+autocmd FileType help noremap <buffer> u <c-u>
+autocmd FileType help noremap <buffer> d <c-d>
+noremap <buffer> q :q<cr>
+
+" abbr
+iabbrev class public class{}<esc>i<cr><esc>k$Fsli
 
 function! s:swap_lines(n1, n2)
     let line1 = getline(a:n1)
@@ -188,72 +190,37 @@ function! s:swap_down()
     exec n + 1
 endfunction
 
-" noremap <silent> <c-s-k> :call <SID>swap_up()<CR>
-" noremap <silent> <c-s-j> :call <SID>swap_down()<CR>
+noremap <silent> <c-s-j> :call <SID>swap_down()<CR>
+noremap <silent> <c-s-k> :call <SID>swap_up()<CR>
 
 
-set rtp+=/opt/homebrew/opt/fzf
+" set rtp+=/opt/homebrew/opt/fzf
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Returns true if paste mode is enabled
-function! HasPaste()
-    if &paste
-        return 'PASTE MODE  '
-    endif
-    return ''
-endfunction
-
-" Don't close window, when deleting a buffer
-command! Bclose call <SID>BufcloseCloseIt()
-function! <SID>BufcloseCloseIt()
-    let l:currentBufNum = bufnr("%")
-    let l:alternateBufNum = bufnr("#")
-
-    if buflisted(l:alternateBufNum)
-        buffer #
-    else
-        bnext
-    endif
-
-    if bufnr("%") == l:currentBufNum
-        new
-    endif
-
-    if buflisted(l:currentBufNum)
-        execute("bdelete! ".l:currentBufNum)
-    endif
-endfunction
-
-function! CmdLine(str)
-    call feedkeys(":" . a:str)
-endfunction
-
-function! VisualSelection(direction, extra_filter) range
-    let l:saved_reg = @"
-    execute "normal! vgvy"
-
-    let l:pattern = escape(@", "\\/.*'$^~[]")
-    let l:pattern = substitute(l:pattern, "\n$", "", "")
-
-    if a:direction == 'gv'
-        call CmdLine("Ack '" . l:pattern . "' " )
-    elseif a:direction == 'replace'
-        call CmdLine("%s" . '/'. l:pattern . '/')
-    endif
-
-    let @/ = l:pattern
-    let @" = l:saved_reg
-endfunction
 
 
 "----------------------coc.vim
 "Use <Tab> and <S-Tab> to navigate the completion list:
-"inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" Use K to show documentation in preview window.
+nnoremap <silent> <leader>h :call <SID>show_documentation()<CR>
 
-
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
 
 "==============================================================================
 " vim-go 插件
@@ -340,11 +307,20 @@ autocmd Filetype markdown inoremap ,h ====<Space><++><Esc>F=hi
 autocmd Filetype markdown inoremap ,p ![](<++>) <++><Esc>F[a
 autocmd Filetype markdown inoremap ,a [](<++>) <++><Esc>F[a
 autocmd Filetype markdown inoremap ,1 #<Space><Enter><++><Esc>kA
+autocmd Filetype markdown nnoremap ,1 I#<Space><Esc>
 autocmd Filetype markdown inoremap ,2 ##<Space><Enter><++><Esc>kA
+autocmd Filetype markdown nnoremap m2 I##<Space><Esc>
 autocmd Filetype markdown inoremap ,3 ###<Space><Enter><++><Esc>kA
+autocmd Filetype markdown nnoremap m3 I###<Space><Esc>
 autocmd Filetype markdown inoremap ,4 ####<Space><Enter><++><Esc>kA
+autocmd Filetype markdown nnoremap m4 I####<Space><Esc>
 autocmd Filetype markdown inoremap ,l --------<Enter>
-
+function! s:MarkCodeBlock() abort
+    " Add Markdown code-block delimiters to begin and end of current visual group.
+    call append(line("'<")-1, '```')
+    call append(line("'>"), '```')
+endfunction
+xnoremap mc :<c-u>call <sid>MarkCodeBlock()<CR>
 
 function! Zoom ()
     " check if is the zoomed state (tabnumber > 1 && window == 1)
@@ -363,3 +339,51 @@ function! Zoom ()
 endfunction
 
 nmap <leader>z :call Zoom()<CR>
+
+
+" autosave
+let g:auto_save = 1  " enable AutoSave on Vim startup
+let g:auto_save_silent = 1  " do not display the auto-save notification
+
+" tagbar
+let g:tagbar_type_go = {
+	\ 'ctagstype' : 'go',
+	\ 'kinds'     : [
+		\ 'p:package',
+		\ 'i:imports:1',
+		\ 'c:constants',
+		\ 'v:variables',
+		\ 't:types',
+		\ 'n:interfaces',
+		\ 'w:fields',
+		\ 'e:embedded',
+		\ 'm:methods',
+		\ 'r:constructor',
+		\ 'f:functions'
+	\ ],
+	\ 'sro' : '.',
+	\ 'kind2scope' : {
+		\ 't' : 'ctype',
+		\ 'n' : 'ntype'
+	\ },
+	\ 'scope2kind' : {
+		\ 'ctype' : 't',
+		\ 'ntype' : 'n'
+	\ },
+	\ 'ctagsbin'  : 'gotags',
+	\ 'ctagsargs' : '-sort -silent'
+\ }
+
+" align
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+vmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+
+"escape
+" use jj to escape insert mode.
+let g:better_escape_shortcut = 'jj'
+" set time interval to 200 ms
+let g:better_escape_interval = 200
