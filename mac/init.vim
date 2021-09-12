@@ -1,47 +1,107 @@
+call plug#begin(stdpath('data') . '/plugged')
+Plug 'fatih/vim-go'
+Plug 'easymotion/vim-easymotion'
+Plug 'rmagatti/auto-session'
+Plug 'karb94/neoscroll.nvim'
+Plug 'voldikss/vim-floaterm'
+Plug 'qpkorr/vim-bufkill'
+Plug 'tpope/vim-fugitive'
+Plug 'rbong/vim-flog'
+Plug 'justinmk/vim-sneak'
+Plug 'Raimondi/delimitMate'
+Plug 'gelguy/wilder.nvim'
+Plug 'preservim/tagbar'
+
+"markdown
+Plug 'lvht/tagbar-markdown'
+Plug 'plasticboy/vim-markdown'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+Plug 'tpope/vim-surround'
+Plug 'wbthomason/packer.nvim'
+Plug 'airblade/vim-gitgutter'
+Plug 'airblade/vim-rooter'
+Plug 'folke/tokyonight.nvim'
+" 快捷键提示
+" Plug 'spinks/vim-leader-guide'
+" Plug 'liuchengxu/vim-which-key'
+Plug 'glepnir/dashboard-nvim'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'kyazdani42/nvim-web-devicons'  
+Plug 'kyazdani42/nvim-tree.lua',
+Plug 'akinsho/bufferline.nvim'
+Plug '907th/vim-auto-save'
+Plug 'farmergreg/vim-lastplace'
+Plug 'lifepillar/vim-cheat40'
+Plug 'tomtom/tcomment_vim'
+" 可以快速对齐的插件
+Plug 'junegunn/vim-easy-align'
+" Vim状态栏插件，包括显示行号，列号，文件类型，文件名，以及Git状态
+Plug 'vim-airline/vim-airline'
+Plug 'jdhao/better-escape.vim'
+Plug 'mbbill/undotree'
+" nerdtree 等图标
+Plug 'ryanoasis/vim-devicons'
+Plug 'neoclide/coc.nvim' , { 'branch': 'release'}
+call plug#end()
+
+
+
 " set runtimepath^=~/.vim runtimepath+=~/.vim/after
 " let &packpath = &runtimepath
 " source ~/.vimrc
 
 " lua require('plugins')
 
+
 lua << EOF
-require('packer').startup(function()
-	-- Packer can manage itself
-	-- use 'jszakmeister/markdown2ctags'
-	use 'lvht/tagbar-markdown'
-	use 'preservim/tagbar'
-	use 'plasticboy/vim-markdown'
-	use 'tpope/vim-surround'
-	use 'wbthomason/packer.nvim'
-	use 'airblade/vim-gitgutter'
-	use 'airblade/vim-rooter'
-	use 'folke/tokyonight.nvim'
-	-- 快捷键提示
-	-- use 'spinks/vim-leader-guide'
-	use 'liuchengxu/vim-which-key'
-	use 'fatih/vim-go'
-	use 'glepnir/dashboard-nvim'
-	use 'junegunn/fzf'
-	use 'junegunn/fzf.vim'
-	use {
-		'kyazdani42/nvim-tree.lua',
-		requires = 'kyazdani42/nvim-web-devicons'
-	}
-	use {'akinsho/bufferline.nvim', requires = 'kyazdani42/nvim-web-devicons'}
-	use '907th/vim-auto-save'
-	use 'farmergreg/vim-lastplace'
-	use 'lifepillar/vim-cheat40'
-	use 'tomtom/tcomment_vim'
-	-- 可以快速对齐的插件
-	use 'junegunn/vim-easy-align'
-	-- Vim状态栏插件，包括显示行号，列号，文件类型，文件名，以及Git状态
-	use 'vim-airline/vim-airline'
-	use 'jdhao/better-escape.vim'
-	use 'mbbill/undotree'
-	-- nerdtree 等图标
-	use 'ryanoasis/vim-devicons'
-	use {'neoclide/coc.nvim',  branch = 'release'}
-end)
+-- require('packer').startup(function()
+-- 	-- Packer can manage itself
+-- 	use { 'fatih/vim-go'}
+-- 	use 'easymotion/vim-easymotion'
+-- 	use 'rmagatti/auto-session'
+-- 	use 'karb94/neoscroll.nvim'
+-- 	use 'voldikss/vim-floaterm'
+-- 	use 'qpkorr/vim-bufkill'
+-- 	use 'tpope/vim-fugitive'
+-- 	use 'rbong/vim-flog'
+-- 	use 'justinmk/vim-sneak'
+-- 	use 'Raimondi/delimitMate'
+-- 	use 'gelguy/wilder.nvim'
+-- 	use 'preservim/tagbar'
+-- 	use 'lvht/tagbar-markdown'
+-- 	use 'plasticboy/vim-markdown'
+-- 	use 'iamcco/markdown-preview.nvim'
+-- 	use 'tpope/vim-surround'
+-- 	use 'wbthomason/packer.nvim'
+-- 	use 'airblade/vim-gitgutter'
+-- 	use 'airblade/vim-rooter'
+-- 	use 'folke/tokyonight.nvim'
+-- 	-- 快捷键提示
+-- 	-- use 'spinks/vim-leader-guide'
+-- 	use 'liuchengxu/vim-which-key'
+-- 	use 'glepnir/dashboard-nvim'
+-- 	use 'junegunn/fzf'
+-- 	use 'junegunn/fzf.vim'
+-- 	use {
+-- 		'kyazdani42/nvim-tree.lua',
+-- 		requires = 'kyazdani42/nvim-web-devicons'
+-- 	}
+-- 	use {'akinsho/bufferline.nvim', requires = 'kyazdani42/nvim-web-devicons'}
+-- 	use '907th/vim-auto-save'
+-- 	use 'farmergreg/vim-lastplace'
+-- 	use 'lifepillar/vim-cheat40'
+-- 	use 'tomtom/tcomment_vim'
+-- 	-- 可以快速对齐的插件
+-- 	use 'junegunn/vim-easy-align'
+-- 	-- Vim状态栏插件，包括显示行号，列号，文件类型，文件名，以及Git状态
+-- 	use 'vim-airline/vim-airline'
+-- 	use 'jdhao/better-escape.vim'
+-- 	use 'mbbill/undotree'
+-- 	-- nerdtree 等图标
+-- 	use 'ryanoasis/vim-devicons'
+-- 	use {'neoclide/coc.nvim',  branch = 'release'}
+-- end)
 EOF
 
 set autochdir      
@@ -76,13 +136,12 @@ let mapleader=";"
 nnoremap <CR> o<Esc>
 " space 插入空格
 noremap <Space> i<Space><Esc>l
-" backspace 删除
-noremap <BS> i<BS><Esc>l
 " 切换窗口
 noremap  <leader>w <c-w>w 
 " 首尾切换
 noremap <expr>0 col(".")==1?"$":"0"
-
+" 支持在Visual模式下，通过C-y复制到系统剪切板
+vnoremap <C-y> "+y
 " command------------
 " (useful for handling the permission-denied error)
 command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
@@ -120,18 +179,19 @@ function! s:swap_down()
     exec n + 1
 endfunction
 
-noremap <silent> <c-s-j> :call <SID>swap_down()<CR>
-noremap <silent> <c-s-k> :call <SID>swap_up()<CR>
+noremap <silent> <c-j> :call <SID>swap_down()<CR>
+noremap <silent> <c-k> :call <SID>swap_up()<CR>
 
 
 "----------------------coc.vim
 nmap <silent> <F2> <Plug>(coc-diagnostic-next)
 " GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gd <Plug>(coc-definition)zz
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
+nmap <silent> gr <Plug>(coc-references-used)
+nmap <silent> cc :CocListCancel<cr>
+nmap cf <plug>(coc-fix-current)
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
@@ -163,6 +223,15 @@ function! s:show_documentation()
 	endif
 endfunction
 
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+  " set signcolumn=yes
 "==============================================================================
 " vim-go 插件
 "==============================================================================
@@ -185,12 +254,13 @@ let g:go_highlight_generate_tags = 1
 let g:godef_split=2
 
 " Status line types/signatures
-let g:go_auto_type_info = 1
+let g:go_auto_type_info = 0
 
 " highlight identifiers
 let g:go_auto_sameids = 1
 " 禁用K快捷键
 let g:go_doc_keywordprg_enabled = 0
+let g:go_def_mapping_enabled=0
 "au filetype go inoremap <buffer> . .<C-x><C-o>
 " map <F2> :cnext<CR>
 " Ex: `\b` for building, `\r` for running and `\b` for running test.
@@ -198,36 +268,37 @@ autocmd FileType go nmap <leader>b  <Plug>(go-build)
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
 " autocmd FileType go nmap <leader>t  <Plug>(go-test)
 autocmd FileType go nmap gb  <c-t>
-
-" comment
+autocmd FileType go nmap gf [[f(f(hh
+" comment-----------------
 inoremap <c-.> <c-_><c-_>
 
-"airline
+"airline-----------------
 let g:airline_powerline_fonts = 1 
 
-"session
-let g:session_autosave = 'no'
+"session---------------------
+" let g:session_autosave = 'no'
 
-" markdown
-autocmd Filetype markdown inoremap ,f <Esc>/<++><CR>:nohlsearch<CR>c4l
-autocmd Filetype markdown inoremap ,n ---<Enter><Enter>
-autocmd Filetype markdown inoremap ,b **** <++><Esc>F*hi
-autocmd Filetype markdown inoremap ,s ~~~~ <++><Esc>F~hi
-autocmd Filetype markdown inoremap ,i ** <++><Esc>F*i
-autocmd Filetype markdown inoremap ,d `` <++><Esc>F`i
-autocmd Filetype markdown inoremap ,c ```<Enter><++><Enter>```<Enter><Enter><++><Esc>4kA
-autocmd Filetype markdown inoremap ,h ====<Space><++><Esc>F=hi
-autocmd Filetype markdown inoremap ,p ![](<++>) <++><Esc>F[a
-autocmd Filetype markdown inoremap ,a [](<++>) <++><Esc>F[a
-autocmd Filetype markdown inoremap ,1 #<Space><Enter><++><Esc>kA
-autocmd Filetype markdown nnoremap ,1 I#<Space><Esc>
-autocmd Filetype markdown inoremap ,2 ##<Space><Enter><++><Esc>kA
+" markdown-------------------------------
+autocmd Filetype markdown inoremap <leader>mf <Esc>/<++><CR>:nohlsearch<CR>c4l
+autocmd Filetype markdown inoremap <leader>mn ---<Enter><Enter>
+autocmd Filetype markdown inoremap <leader>mb **** <++><Esc>F*hi
+autocmd Filetype markdown inoremap <leader>ms ~~~~ <++><Esc>F~hi
+autocmd Filetype markdown inoremap <leader>mi ** <++><Esc>F*i
+autocmd Filetype markdown inoremap <leader>md `` <++><Esc>F`i
+autocmd Filetype markdown inoremap <leader>mc ```<Enter><++><Enter>```<Enter><Enter><++><Esc>4kA
+autocmd Filetype markdown nnoremap <leader>mc i```<Enter><Enter>```<Enter><Enter><++><Esc>3k
+autocmd Filetype markdown inoremap <leader>mh ====<Space><++><Esc>F=hi
+autocmd Filetype markdown inoremap <leader>mp ![](<++>) <++><Esc>F[a
+autocmd Filetype markdown inoremap <leader>ma [](<++>) <++><Esc>F[a
+autocmd Filetype markdown inoremap m1 #<Space><Enter><++><Esc>kA
+autocmd Filetype markdown nnoremap m1 I#<Space><Esc>
+autocmd Filetype markdown inoremap m2 ##<Space><Enter><++><Esc>kA
 autocmd Filetype markdown nnoremap m2 I##<Space><Esc>
-autocmd Filetype markdown inoremap ,3 ###<Space><Enter><++><Esc>kA
+autocmd Filetype markdown inoremap m3 ###<Space><Enter><++><Esc>kA
 autocmd Filetype markdown nnoremap m3 I###<Space><Esc>
-autocmd Filetype markdown inoremap ,4 ####<Space><Enter><++><Esc>kA
+autocmd Filetype markdown inoremap m4 ####<Space><Enter><++><Esc>kA
 autocmd Filetype markdown nnoremap m4 I####<Space><Esc>
-autocmd Filetype markdown inoremap ,l --------<Enter>
+autocmd Filetype markdown inoremap ml --------<Enter>
 function! s:MarkCodeBlock() abort
 	" Add Markdown code-block delimiters to begin and end of current visual group.
 	call append(line("'<")-1, '```')
@@ -326,16 +397,51 @@ let g:dashboard_default_executive ='fzf'
 set termguicolors
 " These commands will navigate through buffers in order regardless of which mode you are using
 " e.g. if you change the order of buffers :bnext and :bprevious will not respect the custom ordering
-nnoremap <silent><leader>n :BufferLineCycleNext<CR>
-nnoremap <silent><leader>p :BufferLineCyclePrev<CR>
+nnoremap <silent>bn :BufferLineCycleNext<CR>
+nnoremap <silent>bp :BufferLineCyclePrev<CR>
+nnoremap <silent> bf :BufferLinePick<CR>
+nnoremap <silent> bc :BufferLinePickClose<CR>
+nnoremap <silent>bmn :BufferLineMoveNext<CR>
+nnoremap <silent>bmm :BufferLineMovePrev<CR>
+
 lua << EOF
+
+function split(input, delimiter)
+    input = tostring(input)
+    delimiter = tostring(delimiter)
+    if (delimiter == "") then return false end
+    local pos, arr = 0, {}
+    for st, sp in function() return string.find(input, delimiter, pos, true) end do
+        table.insert(arr, string.sub(input, pos, st - 1))
+        pos = sp + 1
+    end
+    table.insert(arr, string.sub(input, pos))
+    return arr
+end
+
+-- local path=split(vim.fn.FindRootDirectory(),"/")
+
+
+
 require('bufferline').setup {
 	options = {
-		offsets = {{filetype = "NvimTree"}},
+		-- numbers = "buffer_id",
+		show_close_icon = false,
+		offsets = {
+			{
+					filetype = "NvimTree",
+					text = function()
+					return split(vim.fn.FindRootDirectory(),"/")[#split(vim.fn.FindRootDirectory(),"/")]
+				end
+			}
+			},
 		}
 	}
 EOF
 
+
+" buf-kill-------------------
+map bk :BD<cr>
 "-----------map key
 "" Define prefix dictionary
 let g:which_key_map =  {}
@@ -355,11 +461,13 @@ let g:which_key_map.a = 'toggle recursively'
 colorscheme tokyonight
 
 " tree
+nnoremap <leader>t :NvimTreeToggle<CR>
+let g:nvim_tree_lsp_diagnostics = 1
 let g:nvim_tree_respect_buf_cwd = 1 "0 by default, will change cwd of nvim-tree to that of new buffer's when opening nvim-tree.
 let g:nvim_tree_follow = 1 "0 by default, this option allows the cursor to be updated when entering a buffer
 let g:nvim_tree_follow_update_path = 1 "0 by default, will update the path of the current dir if the file is not inside the tree.Default is 0
 let g:nvim_tree_indent_markers = 1
-nnoremap <leader>t :NvimTreeToggle<CR>
+let g:nvim_tree_respect_buf_cwd = 1 "0 by default, will change cwd of nvim-tree to that of new buffer's when opening nvim-tree.
 let g:nvim_tree_hide_dotfiles = 1
 let g:nvim_tree_git_hl = 1 "0 by default, will enable file highlight for git attributes (can be used without the icons).
 let g:nvim_tree_auto_close = 1
@@ -369,16 +477,80 @@ nmap <F8> :TagbarToggle<CR>
 
 " Add support for markdown files in tagbar.
 let g:tagbar_type_markdown = {
-    \ 'ctagstype': 'markdown',
-    \ 'ctagsbin' : '/opt/homebrew/lib/python3.9/site-packages/markdown2ctags.py',
-    \ 'ctagsargs' : '-f - --sort=yes --sro=»',
-    \ 'kinds' : [
-        \ 's:sections',
-        \ 'i:images'
-    \ ],
-    \ 'sro' : '»',
-    \ 'kind2scope' : {
-        \ 's' : 'section',
-    \ },
-    \ 'sort': 0,
-\ }
+			\ 'ctagstype': 'markdown',
+			\ 'ctagsbin' : '/opt/homebrew/lib/python3.9/site-packages/markdown2ctags.py',
+			\ 'ctagsargs' : '-f - --sort=yes --sro=»',
+			\ 'kinds' : [
+				\ 's:sections',
+				\ 'i:images'
+				\ ],
+				\ 'sro' : '»',
+				\ 'kind2scope' : {
+					\ 's' : 'section',
+					\ },
+					\ 'sort': 0,
+					\ }
+
+" wilder
+call wilder#setup({'modes': [':', '/', '?']})
+
+"sneak
+let g:sneak#s_next = 1
+nmap fn <Plug>Sneak_s
+nmap fp <Plug>Sneak_S
+
+"terminal---------
+nnoremap   <silent>   <F12>   :FloatermToggle<CR>
+tnoremap   <silent>   <F12>   <C-\><C-n>:FloatermToggle<CR>
+
+"scroll------------
+lua << EOF
+require('neoscroll').setup({
+-- All these keys will be mapped to their corresponding default scrolling animation
+mappings = {'<leader>u', '<leader>d>', '<C-b>', '<C-f>',
+ 'zt', 'zz', 'zb'},
+hide_cursor = true,          -- Hide cursor while scrolling
+stop_eof = true,             -- Stop at <EOF> when scrolling downwards
+use_local_scrolloff = false, -- Use the local scope of scrolloff instead of the global scope
+respect_scrolloff = false,   -- Stop scrolling when the cursor reaches the scrolloff margin of the file
+cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
+easing_function = "quadratic",        -- Default easing function
+pre_hook = nil,              -- Function to run before the scrolling animation starts
+post_hook = nil,              -- Function to run after the scrolling animation ends
+})
+
+local t = {}
+-- Syntax: t[keys] = {function, {function arguments}}
+t['<leader>u'] = {'scroll', {'-vim.wo.scroll', 'true', '350'}}
+t['<leader>d'] = {'scroll', { 'vim.wo.scroll', 'true', '350'}}
+t['<C-b>'] = {'scroll', {'-vim.api.nvim_win_get_height(0)', 'true', '450'}}
+t['<C-f>'] = {'scroll', { 'vim.api.nvim_win_get_height(0)', 'true', '450'}}
+t['zt']    = {'zt', {'250'}}
+t['zz']    = {'zz', {'250'}}
+t['zb']    = {'zb', {'250'}}
+
+require('neoscroll.config').set_mappings(t)
+EOF
+
+
+" session-----------------
+lua << EOF
+vim.o.sessionoptions="blank,buffers,curdir,folds,help,options,tabpages,winsize,resize,winpos,terminal"
+
+local opts = {
+	log_level = 'debug',
+	auto_session_enable_last_session = false,
+	auto_session_root_dir = "/Users/bowen/.config/nvim/sessions/",
+	}
+
+require('auto-session').setup(opts)
+EOF
+	
+" packer---------
+nnoremap pp 0i<BS><esc>0i<BS><esc>
+nnoremap pi :source ~/.config/nvim/init.vim<cr>:PackerInstall<cr>
+
+" motion--------------
+map  <Leader>f <Plug>(easymotion-s2)
+
+

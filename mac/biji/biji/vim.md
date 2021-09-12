@@ -47,7 +47,7 @@ t    	tag （HTML 或 XML）标签
 { 或 }	{…}
 “	    “…”
 ‘	    ‘…’
-`	    `…`
+\`	    `…`
 举个例子 di" (delete inner “) 会删除双引号之内的所有内容，而 da" (delete a “) 则会删除包含双引号在内的所有内容。
 
 /charaters	查找指定的字符串，通过 n 命令来跳转到下一个,N 跳到上一个
@@ -76,6 +76,10 @@ t    	tag （HTML 或 XML）标签
 按大写的 I 进入行首插入模式
 #
 Nerdtree刷新 按r就一下子刷新了。
+
+### 命令行模式
+在命令模式下粘贴寄存器的内容方法是CTRL-R加寄存器的名字。复制之后的内容一般在寄存器"中。
+
 
 #### Macro 宏
 假设光标在首行第一个词 set 处，按下 qa 开始记录：cw (change word) 然后输入 test，回到 normal mode 后移光标至下一行行首，再按下 q，录制结束。
@@ -128,6 +132,14 @@ let g:tagbar_type_markdown = {
     \ 'sort': 0,
 \ }
 ```
+
+## map
+let g:sessions_dir = '~/vim-sessions'
+
+" Remaps for Sessions
+exec 'nnoremap <Leader>ss :Obsession ' . g:session_dir . '/*.vim<C-D><BS><BS><BS><BS><BS>'
+exec 'nnoremap <Leader>sr :so ' . g:session_dir. '/*.vim<C-D><BS><BS><BS><BS><BS>'
+
 
 aa a
 aa

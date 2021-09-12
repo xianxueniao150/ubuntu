@@ -24,3 +24,6 @@ ctrl + e	到行尾
 ctrl + f/b	前进后退
 ctrl + p	上一条命令
 ctrl + r	搜索命令历史
+
+
+http://azaleasays.com/2014/03/05/iterm2-merge-a-pane-back-to-window-or-tab-bar/
