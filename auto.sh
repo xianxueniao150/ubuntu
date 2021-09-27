@@ -10,5 +10,11 @@ cp ~/.config/nvim/init.vim ./mac/init.vim
 cp -R ~/biji ./mac/biji
 
 git add .
-git commit -m "auto"
+
+commitMessage=$(date "+%Y-%m-%d")
+if [ $# -eq 1 ];then
+    $commitMessage=$1
+fi
+
+git commit -m $commitMessage
 git push

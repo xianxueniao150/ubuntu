@@ -1,7 +1,15 @@
 call plug#begin(stdpath('data') . '/plugged')
+" Plug 'tpope/vim-obsession'
+Plug 'SirVer/ultisnips'
+Plug 'APZelos/blamer.nvim'
+Plug 'tpope/vim-repeat'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'sindrets/diffview.nvim'
+Plug 'pseewald/vim-anyfold'
 Plug 'fatih/vim-go'
 Plug 'easymotion/vim-easymotion'
-Plug 'rmagatti/auto-session'
+" Plug 'rmagatti/auto-session'
 Plug 'karb94/neoscroll.nvim'
 Plug 'voldikss/vim-floaterm'
 Plug 'qpkorr/vim-bufkill'
@@ -9,13 +17,15 @@ Plug 'tpope/vim-fugitive'
 Plug 'rbong/vim-flog'
 Plug 'justinmk/vim-sneak'
 Plug 'Raimondi/delimitMate'
-Plug 'gelguy/wilder.nvim'
+Plug 'gelguy/wilder.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'preservim/tagbar'
 
 "markdown
 Plug 'lvht/tagbar-markdown'
+Plug 'ferrine/md-img-paste.vim'
 Plug 'plasticboy/vim-markdown'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+
 Plug 'tpope/vim-surround'
 Plug 'wbthomason/packer.nvim'
 Plug 'airblade/vim-gitgutter'
@@ -55,7 +65,7 @@ call plug#end()
 
 
 lua << EOF
--- require('packer').startup(function()
+require('packer').startup(function()
 -- 	-- Packer can manage itself
 -- 	use { 'fatih/vim-go'}
 -- 	use 'easymotion/vim-easymotion'
@@ -73,7 +83,7 @@ lua << EOF
 -- 	use 'plasticboy/vim-markdown'
 -- 	use 'iamcco/markdown-preview.nvim'
 -- 	use 'tpope/vim-surround'
--- 	use 'wbthomason/packer.nvim'
+	use 'wbthomason/packer.nvim'
 -- 	use 'airblade/vim-gitgutter'
 -- 	use 'airblade/vim-rooter'
 -- 	use 'folke/tokyonight.nvim'
@@ -101,11 +111,16 @@ lua << EOF
 -- 	-- nerdtree 等图标
 -- 	use 'ryanoasis/vim-devicons'
 -- 	use {'neoclide/coc.nvim',  branch = 'release'}
--- end)
+end)
 EOF
 
+filetype plugin indent on " required
+au! BufNewFile,BufRead Dockerfile.* setf dockerfile
+syntax on                 " required
 set autochdir      
-set foldmethod=syntax
+" set foldcolumn=1
+" set foldmethod=manual
+" autocmd FileType go setlocal foldmethod=syntax
 set foldlevel=20
 " By default timeoutlen is 1000 ms
 set timeoutlen=500
@@ -137,7 +152,7 @@ nnoremap <CR> o<Esc>
 " space 插入空格
 noremap <Space> i<Space><Esc>l
 " 切换窗口
-noremap  <leader>w <c-w>w 
+noremap  <leader>w <c-w>
 " 首尾切换
 noremap <expr>0 col(".")==1?"$":"0"
 " 支持在Visual模式下，通过C-y复制到系统剪切板
@@ -190,6 +205,7 @@ nmap <silent> gd <Plug>(coc-definition)zz
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references-used)
+nmap <silent> go <c-o>
 nmap <silent> cc :CocListCancel<cr>
 nmap cf <plug>(coc-fix-current)
 " Highlight the symbol and its references when holding the cursor.
@@ -199,8 +215,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
 
 "Use <Tab> and <S-Tab> to navigate the completion list:
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
@@ -235,7 +251,8 @@ omap af <Plug>(coc-funcobj-a)
 "==============================================================================
 " vim-go 插件
 "==============================================================================
-let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
+" let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
+let g:go_fmt_experimental = 1
 let g:go_fmt_fail_silently = 1 "保存时不提示错误
 let g:go_autodetect_gopath = 1
 let g:go_list_type = "quickfix"
@@ -282,29 +299,40 @@ let g:airline_powerline_fonts = 1
 autocmd Filetype markdown inoremap <leader>mf <Esc>/<++><CR>:nohlsearch<CR>c4l
 autocmd Filetype markdown inoremap <leader>mn ---<Enter><Enter>
 autocmd Filetype markdown inoremap <leader>mb **** <++><Esc>F*hi
+autocmd Filetype markdown vnoremap <leader>mb di***<esc>pa***<esc>  
 autocmd Filetype markdown inoremap <leader>ms ~~~~ <++><Esc>F~hi
 autocmd Filetype markdown inoremap <leader>mi ** <++><Esc>F*i
 autocmd Filetype markdown inoremap <leader>md `` <++><Esc>F`i
 autocmd Filetype markdown inoremap <leader>mc ```<Enter><++><Enter>```<Enter><Enter><++><Esc>4kA
-autocmd Filetype markdown nnoremap <leader>mc i```<Enter><Enter>```<Enter><Enter><++><Esc>3k
+autocmd Filetype markdown nnoremap <leader>mc i```<Enter><Enter>```<Esc>k
 autocmd Filetype markdown inoremap <leader>mh ====<Space><++><Esc>F=hi
 autocmd Filetype markdown inoremap <leader>mp ![](<++>) <++><Esc>F[a
 autocmd Filetype markdown inoremap <leader>ma [](<++>) <++><Esc>F[a
-autocmd Filetype markdown inoremap m1 #<Space><Enter><++><Esc>kA
+" autocmd Filetype markdown inoremap m1 #<Space><Enter><++><Esc>kA
 autocmd Filetype markdown nnoremap m1 I#<Space><Esc>
-autocmd Filetype markdown inoremap m2 ##<Space><Enter><++><Esc>kA
+" autocmd Filetype markdown inoremap m2 ##<Space><Enter><++><Esc>kA
 autocmd Filetype markdown nnoremap m2 I##<Space><Esc>
-autocmd Filetype markdown inoremap m3 ###<Space><Enter><++><Esc>kA
+" autocmd Filetype markdown inoremap m3 ###<Space><Enter><++><Esc>kA
 autocmd Filetype markdown nnoremap m3 I###<Space><Esc>
-autocmd Filetype markdown inoremap m4 ####<Space><Enter><++><Esc>kA
+" autocmd Filetype markdown inoremap m4 ####<Space><Enter><++><Esc>kA
 autocmd Filetype markdown nnoremap m4 I####<Space><Esc>
-autocmd Filetype markdown inoremap ml --------<Enter>
+" autocmd Filetype markdown inoremap ml --------<Enter>
+" autocmd Filetype markdown xnoremap ms :let i=1 | '<,'>g/^/s//\=i . '. '/ |let i=i+1
+"
 function! s:MarkCodeBlock() abort
 	" Add Markdown code-block delimiters to begin and end of current visual group.
 	call append(line("'<")-1, '```')
 	call append(line("'>"), '```')
 endfunction
 xnoremap mc :<c-u>call <sid>MarkCodeBlock()<CR>
+
+
+
+autocmd FileType markdown nmap <buffer><silent> <leader>mp :call mdip#MarkdownClipboardImage()<CR>
+" there are some defaults for image directory and image name, you can change them
+let g:mdip_imgdir = 'image'
+
+
 
 function! Zoom ()
 	" check if is the zoomed state (tabnumber > 1 && window == 1)
@@ -370,7 +398,7 @@ nmap ga <Plug>(EasyAlign)
 " use jj to escape insert mode.
 let g:better_escape_shortcut = 'jj'
 " set time interval to 200 ms
-let g:better_escape_interval = 200
+let g:better_escape_interval = 600
 
 
 
@@ -445,7 +473,7 @@ map bk :BD<cr>
 "-----------map key
 "" Define prefix dictionary
 let g:which_key_map =  {}
-call which_key#register('z', "g:which_key_map")
+" call which_key#register('z', "g:which_key_map")
 " nnoremap <silent> z :<c-u>WhichKey 'z'<CR>
 noremap zr zR
 let g:which_key_map.r = 'expand all'
@@ -534,23 +562,39 @@ EOF
 
 
 " session-----------------
-lua << EOF
-vim.o.sessionoptions="blank,buffers,curdir,folds,help,options,tabpages,winsize,resize,winpos,terminal"
-
-local opts = {
-	log_level = 'debug',
-	auto_session_enable_last_session = false,
-	auto_session_root_dir = "/Users/bowen/.config/nvim/sessions/",
-	}
-
-require('auto-session').setup(opts)
-EOF
+set sessionoptions=buffers,folds
+" lua << EOF
+" vim.o.sessionoptions="blank,buffers,curdir,folds,help,options,tabpages,winsize,resize,winpos,terminal"
+"
+" local opts = {
+" 	log_level = 'debug',
+" 	auto_session_enable_last_session = false,
+" 	auto_session_root_dir = "/Users/bowen/.config/nvim/sessions/",
+" 	}
+"
+" require('auto-session').setup(opts)
+"
+" EOF
 	
 " packer---------
 nnoremap pp 0i<BS><esc>0i<BS><esc>
-nnoremap pi :source ~/.config/nvim/init.vim<cr>:PackerInstall<cr>
+" nnoremap pi :source ~/.config/nvim/init.vim<cr>:PackerInstall<cr>
+nnoremap pi :source ~/.config/nvim/init.vim<cr>:PlugInstall<cr>
 
 " motion--------------
 map  <Leader>f <Plug>(easymotion-s2)
+let g:EasyMotion_smartcase = 1
 
 
+" fold-------------
+autocmd Filetype * AnyFoldActivate               " activate for all filetypes
+
+" fugtive-----------------------
+nmap <leader>gh :diffget //2<cr>
+nmap <leader>gl :diffget //3<cr>
+
+
+" blame---------------
+let g:blamer_show_in_visual_modes = 0
+let g:blamer_show_in_insert_modes = 0
+let g:blamer_date_format = '%y/%m/%d'

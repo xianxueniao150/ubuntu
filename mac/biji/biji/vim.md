@@ -54,6 +54,43 @@ t    	tag （HTML 或 XML）标签
 :%s/cat/dog/g   用dog替换cat
 模式为 global，即替换所有/g;模式为 confirm，即需要使用者确认是否替换文本: /c,  y 确认替换， n 代表不替换
 
+## normal命令
+当需要重复的操作比较简单时，可以配合使用 :{范围}normal . 命令，
+而如果需要执行的重复操作比较复杂时，可以使用 :{范围}normal @q
+
+## :g 全局命令
+```vim
+" 使用:g命令，可以针对所有匹配模式的行执行操作。其命令格式为：
+:[range]g/{pattern}/[command]
+" 命令:g!及其同义词:v，则可以针对所有不匹配模式的行执行操作。其命令格式为：
+:[range]g!/{pattern}/[command]
+" 如果没有指定[command]，则执行:print命令来显示行内容。
+```
+
+example
+```vim
+" 删除包含模式patternn的行：
+:g/pattern/d
+" 删除所有空行：
+:g/^$/d
+" 删除所有空行以及仅包含空格和Tab制表符的行：
+:g/^[ tab]*$/d
+" 将包含“microsoft antitrust”的行中的“judgment”替换为“ripoff”：
+:g/microsoft antitrust/s/judgment/ripoff/
+" 可以在命令中指定查找的范围。比如以下命令，将在包含“microsoft antitrust”的前两行及后两行中进行替换：
+:g/microsoft antitrust/-2,/microsoft antitrust/+2s/judgment/ripoff/c
+```
+
+### 避免vim映射
+normal命令中的可选参数 ! 用于指示vim在当前命令中不使用任何vim映射；如果没有显式使用 ! 选项，即便是执行一个非递归映射 (noremap) 命令，它的参数仍有可能被重新映射。
+
+例如，假设已经设置了vim映射 :nnoremap G dd，则在vim普通模式按下 G 将执行命令 dd，即会删除一整行；此时，若在vim命令行模式下执行命令 :normal G 同样将删除当前行而不会跳转到当前文件的末行。
+
+为了在即便 G 命令已经被设置了映射的条件下也能在vim normal命令中不改变 G 命令原始的含义，需要使用 :normal! G。通过 ! 选项显式指示Vim在当前命令中不使用任何vim映射。
+
+所以，在任何时候写Vim脚本时，都建议总是使用 normal!，永远不要使用 normal 而给自己埋下不确定性的问题。
+
+
 ## 模式
 
 ### 插入模式
@@ -140,25 +177,126 @@ let g:sessions_dir = '~/vim-sessions'
 exec 'nnoremap <Leader>ss :Obsession ' . g:session_dir . '/*.vim<C-D><BS><BS><BS><BS><BS>'
 exec 'nnoremap <Leader>sr :so ' . g:session_dir. '/*.vim<C-D><BS><BS><BS><BS><BS>'
 
+## useful function
+```vim
+""""""""""""""""""""""""""""""
+"Chinese Punctuation
+""""""""""""""""""""""""""""""
+function! CheckChineseMark()
+    "依次检查
+    if search('。')
+        let s:line=search('。')
+        execute s:line . "s/。/\./g"
+    endif
 
-aa a
-aa
-abc
+    if search('，')
+        let s:line=search('，')
+        execute s:line . "s/，/,/g"
+    endif
 
-mmmmmmy<div class="
-mmmmmmy<div class="vimpress">Vimprog</div>
-mmmmmmy<div class="vimpress">Vimprog</div>
-mmmmmmy<div class="vimpress">Vimprog</div>
+    if search('；')
+        let s:line=search('；')
+        execute s:line . "s/；/,/g"
 
-test number
-test relativenumber
-test smartcase
-test autoread
-test j gj
-test k gk
-test <c-h> g0
-test <c-l> g$
-test <F2> :set nowrap! <cr>
-test <c-s> :w!<cr>
-test <leader>w :w!<cr>
+    endif
 
+    if  search('？')
+        let s:line=search('？')
+        execute s:line . "s/？/?/g"
+    endif
+
+    if search('：')
+        let s:line=search('：')
+        execute s:line . "s/：/\:/g"
+    endif
+
+    if search('‘')
+        let s:line=search('‘')
+        execute s:line . "s/‘/\'/g"
+    endif
+
+    if search('’')
+        let s:line=search('’')
+        execute s:line . "s/’/\'/g"
+    endif
+
+    if search('”')
+        let s:line=search('”')
+        execute s:line . "s/”/\"/g"
+    endif
+
+    if search('“')
+        let s:line=search('“')
+        execute s:line . "s/“/\"/g"
+    endif
+
+    if search('《')
+        let s:line=search('《')
+        execute s:line . "s/《/\</g"
+    endif
+
+    if search('》')
+        let s:linie=search('》')
+        execute s:line . "s/》/\>/g"
+    endif
+
+    if search('——')
+        let s:line=search('——')
+        execute s:line . "s/——/-/g"
+    endif
+
+    if search('）')
+        let s:line=search('）')
+        execute s:line . "s/）/\)/g"
+    endif
+
+    if search('（')
+        let s:line=search('（')
+        execute s:line . "s/（/\(/g"
+    endif
+
+    if search('……')
+        let s:line=search('……')
+        execute s:line . "s/……/^/g"
+    endif
+
+    if search('￥')
+        let s:line=search('￥')
+        execute s:line . "s/￥/$/g"
+    endif
+
+    if search('！')
+        let s:line=search('！')
+        execute s:line . "s/！/!/g"
+    endif
+
+    if  search('·')
+        let s:line=search('·')
+        execute s:line . "s/·/`/g"
+    endif
+
+endfunction
+unmap <C-S>
+map! <C-S> <ESC>:call CheckChineseMark()<ESC>:w<ESC>a
+```
+
+```vim
+" 删除空格行：
+:g/^$/d
+" 删除行首空格：
+:%s/^\s*//g
+" 删除行尾空格：
+:%s/\s*$//g
+```
+在Linux机器上，使用s/^m//g替换时，^M要按住CTRL不放并按下v和m键完成输入
+
+```vim
+" 偶数行插入"
+:g/^/if line('.') % 2==0 | execute "norm! I\" "  | endif
+:g/^/if line('.') % 2!=0 | execute "norm! I\" "  | endif
+```
+
+
+![123](image/123.png)
+![kk](image/223.awebp)
+![](image/image_2021-09-26-10-50-13.png)

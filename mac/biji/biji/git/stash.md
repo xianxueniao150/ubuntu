@@ -43,7 +43,8 @@ Adding the `-u` option (or `--include-untracked`) tells `git stash` to also stas
 
 You can include changes to ignored when running `git stash`.
 
-![Git Stash options](image/01-20210912124535094.svg)
+![Git Stash options](image/01-20210912124535094.svg){:height="30%" width="30%"}
+
 
 
 ## Managing multiple stashes
